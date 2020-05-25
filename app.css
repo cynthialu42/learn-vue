@@ -1,0 +1,21 @@
+.row {
+  
+}
+
+.name-box {
+  padding: 10px;
+  margin: 10px;
+  display: inline-block;
+}
+
+.submitted {
+  background-color: aquamarine;
+  color: black;
+  border-color: aquamarine;
+}
+
+.submitted:hover {
+  background-color: pink;
+  color: black;
+  border-color: pink;
+}

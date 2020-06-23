@@ -1,72 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Guest List</title>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+    integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <link rel="stylesheet" href="app.css">
 </head>
+
 <body>
-
-  <div id="app">
-    <div class="container">
-
-      <div class="row" :style="appStyles">
+  <div class="container">
+    <div id="navigation">
+      <div class="row">
         <div class="col-sm-12 text-center">
-          <h1>Guest List</h1>
+          <h1 ref="name" @click="changeTitle">Guest List</h1>
+          <hr>
         </div>
+        <div>
+          <ul class="nav">
+            <template v-for="navlink in navLinks">
+              <li :key="navlink.id" class="nav-item"><a class="nav-link" :href="navlink.url">{{navlink.name}}</a></li>
+              <hr>
+            </template>
+          </ul>
+        </div>
+        
       </div>
+      <hr>
+      <div id="app">
+        <div class="row">
+          <!-- :style="appStyles" -->
+          <!-- v-bind:style="{ marginTop: '25px' }" -->
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                {{ event.eventDate }}
+              </div>
+              <div class="card-block">
+                <h4 class="card-title" v-once>{{ event.eventTitle }}</h4>
+                <hr>
+                <p class="card-text">{{ event.eventDescription }}</p>
+                <p class="card-text" v-html="event.signUpText"></p>
 
-      <div class="row" :style="appStyles"> 
-        <!-- v-bind:style="{ marginTop: '25px' }" -->
-        <div class="col-sm-12">
-          <div class="card">
-            <div class="card-header" :class="formSubmitClass">
-              {{ event.eventDate }}
-            </div>
-            <div class="card-block">
-              <h4 class="card-title" v-once>{{ event.eventTitle }}</h4><hr>
-              <p class="card-text">{{ event.eventDescription }}</p>
-              <p class="card-text" v-html="event.signUpText"></p>
-
-              <form class="form-inline" @submit.prevent="formSubmitted">
-                <input type="text" id="nameInput" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Jane Doe" v-model="newNameText">
-                <input type="submit" class="btn btn-primary" :class="formSubmitClass"></input>
-              </form>
-              {{ newNameText }}
+                <form class="form-inline" @submit.prevent="formSubmitted">
+                  <input type="text" id="nameInput" class="form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Jane Doe"
+                    v-model="newNameText" @keyup.32="keyPressed">
+                  <!-- @keyup.space="keyPressed" enter, tab, escape, up, down, left, right, delete -->
+                  <input type="submit" class="btn btn-primary"></input>
+                  <!-- @click -->
+                </form>
+                {{ newNameText }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row" :style="appStyles">
-        <div class="col-sm-12">
-          <div class="card">
-            <div class="card-header">
-              Attending ({{ guestName.length }})
-            </div>
-            <div class="card-block">
-              <div v-if="guestName.length > 0">
-                <div class="card-success rounded name-box"
-                  v-for="name in guestName"
-                >
-                  {{ name }}
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                Attending ({{ guestName.length }} / {{ eventCapacity }})
+                <br>
+                <progress :style="{width: eventCapacityPercentage + '%'}"></progress>
+                <!-- dynamic style use colon -->
+              </div>
+              <div class="card-block">
+                <div v-if="guestName.length > 0">
+                  <div class="card-success rounded name-box" v-for="(name, index) in sortNames" :key="index">
+                    {{ name | toUpper | formatName }}
+                    <!-- filter -->
+                  </div>
+                </div>
+                <div v-else>
+                  <h4>No Names Added Yet</h4>
                 </div>
               </div>
-              <div v-else>
-                <h4>No Names Added Yet</h4>
-              </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-<script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>
